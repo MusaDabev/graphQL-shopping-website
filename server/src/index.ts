@@ -33,6 +33,8 @@ const Product = mongoose.model("Product", productSchema);
 const typeDefs = `#graphql
   type Query {
     getUser(id: ID!): User
+    getProduct(id: ID!): Product
+    getProducts: [Product]
   }
 
   type Mutation {
@@ -74,6 +76,24 @@ const resolvers = {
         throw new Error("Failed to fetch user");
       }
     },
+    getProduct: async (_, { id }) => {
+      try {
+        const product = await Product.findById(id);
+        return product;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to fetch product");
+      }
+    },
+    getProducts: async () => {
+      try {
+        const products = await Product.find();
+        return products;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to fetch products");
+      }
+    },
   },
   Mutation: {
     createProduct: async (
@@ -104,7 +124,7 @@ const resolvers = {
         return product;
       } catch (error) {
         console.error(error);
-        throw new Error('Failed to create product');
+        throw new Error("Failed to create product");
       }
     },
     createUser: async (
