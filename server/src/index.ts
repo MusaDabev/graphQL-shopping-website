@@ -20,20 +20,46 @@ const userSchema = new mongoose.Schema({
 // Mongoose model
 const User = mongoose.model("User", userSchema);
 
-const typeDefs = `#graphql
-    type Query {
-        getUser(id: ID!): User
-    }
+const productSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  price: Number,
+  image: String,
+  quantity: Number,
+});
 
-    type Mutation {
-    createUser(name: String!, email: String!, password: String!): User
+const Product = mongoose.model("Product", productSchema);
+
+const typeDefs = `#graphql
+  type Query {
+    getUser(id: ID!): User
   }
 
-    type User {
-        id: ID!
-        name: String
-        email: String
-    }
+  type Mutation {
+    createUser(name: String!, email: String!, password: String!): User,
+    createProduct(
+      title: String!
+      description: String!
+      price: Float!
+      image: String!
+      quantity: Int!
+    ): Product
+  }
+
+  type User {
+    id: ID!
+    name: String
+    email: String
+  }
+
+  type Product {
+    id: ID!
+    title: String
+    description: String
+    price: Float
+    image: String
+    quantity: Int
+  }
 `;
 
 // Define resolvers for the schema
@@ -50,6 +76,37 @@ const resolvers = {
     },
   },
   Mutation: {
+    createProduct: async (
+      _: any,
+      {
+        title,
+        description,
+        price,
+        image,
+        quantity,
+      }: {
+        title: string;
+        description: string;
+        price: number;
+        image: string;
+        quantity: number;
+      }
+    ) => {
+      try {
+        const product = new Product({
+          title,
+          description,
+          price,
+          image,
+          quantity,
+        });
+        await product.save();
+        return product;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to create product');
+      }
+    },
     createUser: async (
       _: any,
       {
