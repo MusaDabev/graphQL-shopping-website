@@ -1,6 +1,6 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import mongoose from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 
@@ -11,24 +11,24 @@ const connectionString = process.env.MONGODB_ATLAS_CONNECTION_STRING;
 
 const dbName = process.env.DB_NAME;
 
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  password: String,
-});
+// const userSchema = new mongoose.Schema({
+//   name: String,
+//   email: String,
+//   password: String,
+// });
 
-// Mongoose model
-const User = mongoose.model("User", userSchema);
+// // Mongoose model
+// const User = mongoose.model("User", userSchema);
 
-const productSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  price: Number,
-  image: String,
-  quantity: Number,
-});
+// const productSchema = new mongoose.Schema({
+//   title: String,
+//   description: String,
+//   price: Number,
+//   image: String,
+//   quantity: Number,
+// });
 
-const Product = mongoose.model("Product", productSchema);
+// const Product = mongoose.model("Product", productSchema);
 
 const typeDefs = `#graphql
   type Query {
@@ -45,13 +45,15 @@ const typeDefs = `#graphql
       price: Float!
       image: String!
       quantity: Int!
-    ): Product
+    ): Product,
+    addToCart(userId: ID!, productId: ID!): User
   }
 
   type User {
     id: ID!
     name: String
     email: String
+    cart: [Product]
   }
 
   type Product {
@@ -64,12 +66,71 @@ const typeDefs = `#graphql
   }
 `;
 
+// Define the models
+interface IUser extends Document {
+  name: string;
+  email: string;
+  password: string;
+  cart: IProduct[];
+}
+
+interface IProduct extends Document {
+  title: string;
+  description: string;
+  price: number;
+  image: string;
+  quantity: number;
+}
+
+const UserSchema: Schema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  cart: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+});
+
+const ProductSchema: Schema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+});
+
+const User = mongoose.model<IUser>('User', UserSchema);
+const Product = mongoose.model<IProduct>('Product', ProductSchema);
+
 // Define resolvers for the schema
 const resolvers = {
   Query: {
     getUser: async (_: any, { id }: { id: string }) => {
       try {
-        const user = await User.findById(id);
+        const user = (await User.findById(id)).populate('cart');
         return user;
       } catch (error) {
         console.error(error);
@@ -144,6 +205,19 @@ const resolvers = {
         console.error(error);
         throw new Error("Failed to create user");
       }
+    },
+    addToCart: async (_, { userId, productId }) => {
+      const user = await User.findById(userId);
+      const product = await Product.findById(productId);
+
+      if (!user || !product) {
+        throw new Error('User or product not found');
+      }
+
+      user.cart.push(product);
+      await user.save();
+
+      return user;
     },
   },
 };
