@@ -27,7 +27,8 @@ const typeDefs = `#graphql
       image: String!
       quantity: Int!
     ): Product,
-    addToCart(userId: ID!, productId: ID!): User
+    addToCart(userId: ID!, productId: ID!): User,
+    deleteProduct(id: ID!): Boolean,
   }
 
   type User {
@@ -136,6 +137,7 @@ const resolvers = {
         throw new Error("Failed to fetch products");
       }
     },
+
   },
   Mutation: {
     createProduct: async (
@@ -199,6 +201,18 @@ const resolvers = {
       await user.save();
 
       return user;
+    },
+    deleteProduct: async (_, { id }) => {
+      try {
+        const deletedProduct = await Product.findByIdAndDelete(id);
+        if (!deletedProduct) {
+          throw new Error('Product not found');
+        }
+        return true;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to delete product');
+      }
     },
   },
 };
