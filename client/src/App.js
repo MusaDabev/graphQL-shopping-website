@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import ProductsTable from "./components/ProductsTable";
 import Navbar from "./components/NavBar";
+import UsersList from "./components/UsersList";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SaveProductForm />} />
         <Route path="/products" element={<ProductsTable />} />
+        <Route path="/users" element={<UsersList />} />
       </Routes>
     </ApolloProvider>
   );
