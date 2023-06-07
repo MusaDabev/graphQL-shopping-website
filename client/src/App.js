@@ -3,6 +3,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import ProductsTable from "./components/ProductsTable";
+import Navbar from "./components/NavBar";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -12,6 +13,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
+      <Navbar />
       <Routes>
         <Route path="/" element={<SaveProductForm />} />
         <Route path="/products" element={<ProductsTable />} />
