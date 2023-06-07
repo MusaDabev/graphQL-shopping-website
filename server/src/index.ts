@@ -11,25 +11,6 @@ const connectionString = process.env.MONGODB_ATLAS_CONNECTION_STRING;
 
 const dbName = process.env.DB_NAME;
 
-// const userSchema = new mongoose.Schema({
-//   name: String,
-//   email: String,
-//   password: String,
-// });
-
-// // Mongoose model
-// const User = mongoose.model("User", userSchema);
-
-// const productSchema = new mongoose.Schema({
-//   title: String,
-//   description: String,
-//   price: Number,
-//   image: String,
-//   quantity: Number,
-// });
-
-// const Product = mongoose.model("Product", productSchema);
-
 const typeDefs = `#graphql
   type Query {
     getUser(id: ID!): User
