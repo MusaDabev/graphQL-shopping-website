@@ -29,6 +29,14 @@ const typeDefs = `#graphql
     ): Product,
     addToCart(userId: ID!, productId: ID!): User,
     deleteProduct(id: ID!): Boolean,
+    updateProduct(
+      id: ID!
+      title: String
+      description: String
+      price: Float
+      image: String
+      quantity: Int
+    ): Product,
   }
 
   type User {
@@ -212,6 +220,30 @@ const resolvers = {
       } catch (error) {
         console.error(error);
         throw new Error('Failed to delete product');
+      }
+    },
+    updateProduct: async (_, { id, title, description, price, image, quantity }) => {
+      try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+          id,
+          {
+            title,
+            description,
+            price,
+            image,
+            quantity,
+          },
+          { new: true }
+        );
+
+        if (!updatedProduct) {
+          throw new Error('Product not found');
+        }
+
+        return updatedProduct;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to update product');
       }
     },
   },
