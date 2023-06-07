@@ -14,6 +14,7 @@ const dbName = process.env.DB_NAME;
 const typeDefs = `#graphql
   type Query {
     getUser(id: ID!): User
+    getUsers: [User!]!
     getProduct(id: ID!): Product
     getProducts: [Product]
   }
@@ -86,7 +87,7 @@ const UserSchema: Schema = new Schema({
     type: String,
     required: true,
   },
-  cart: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+  cart: [{ type: Schema.Types.ObjectId, ref: "Product" }],
 });
 
 const ProductSchema: Schema = new Schema({
@@ -112,19 +113,28 @@ const ProductSchema: Schema = new Schema({
   },
 });
 
-const User = mongoose.model<IUser>('User', UserSchema);
-const Product = mongoose.model<IProduct>('Product', ProductSchema);
+const User = mongoose.model<IUser>("User", UserSchema);
+const Product = mongoose.model<IProduct>("Product", ProductSchema);
 
 // Define resolvers for the schema
 const resolvers = {
   Query: {
     getUser: async (_: any, { id }: { id: string }) => {
       try {
-        const user = (await User.findById(id)).populate('cart');
+        const user = (await User.findById(id)).populate("cart");
         return user;
       } catch (error) {
         console.error(error);
         throw new Error("Failed to fetch user");
+      }
+    },
+    getUsers: async () => {
+      try {
+        const users = await User.find();
+        return users;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to fetch users");
       }
     },
     getProduct: async (_, { id }) => {
@@ -145,7 +155,6 @@ const resolvers = {
         throw new Error("Failed to fetch products");
       }
     },
-
   },
   Mutation: {
     createProduct: async (
@@ -202,7 +211,7 @@ const resolvers = {
       const product = await Product.findById(productId);
 
       if (!user || !product) {
-        throw new Error('User or product not found');
+        throw new Error("User or product not found");
       }
 
       user.cart.push(product);
@@ -214,15 +223,18 @@ const resolvers = {
       try {
         const deletedProduct = await Product.findByIdAndDelete(id);
         if (!deletedProduct) {
-          throw new Error('Product not found');
+          throw new Error("Product not found");
         }
         return true;
       } catch (error) {
         console.error(error);
-        throw new Error('Failed to delete product');
+        throw new Error("Failed to delete product");
       }
     },
-    updateProduct: async (_, { id, title, description, price, image, quantity }) => {
+    updateProduct: async (
+      _,
+      { id, title, description, price, image, quantity }
+    ) => {
       try {
         const updatedProduct = await Product.findByIdAndUpdate(
           id,
@@ -237,13 +249,13 @@ const resolvers = {
         );
 
         if (!updatedProduct) {
-          throw new Error('Product not found');
+          throw new Error("Product not found");
         }
 
         return updatedProduct;
       } catch (error) {
         console.error(error);
-        throw new Error('Failed to update product');
+        throw new Error("Failed to update product");
       }
     },
   },
