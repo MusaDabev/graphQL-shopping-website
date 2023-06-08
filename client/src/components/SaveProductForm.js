@@ -79,7 +79,7 @@ function SaveProductForm() {
   return (
     <>
       <Navbar />
-      <div className="container">
+      <div className="container mt-3">
         <h1>Create Product</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -137,7 +137,7 @@ function SaveProductForm() {
               onChange={handleInputChange}
             />
           </div>
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary mt-2">
             Save Product
           </button>
           {loading && <p>Loading...</p>}

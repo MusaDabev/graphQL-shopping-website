@@ -32,31 +32,35 @@ const ProductsTable = () => {
   return (
     <>
       <Navbar />
-      <Link className="btn btn-primary" to="/add-product">Add product</Link>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Image</th>
-            <th>Quantity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => (
-            <tr key={product.id}>
-              <td>{product.id}</td>
-              <td>{product.title}</td>
-              <td>{product.description}</td>
-              <td>{product.price}</td>
-              <td>{product.image}</td>
-              <td>{product.quantity}</td>
+      <div className="p-4">
+        <Link className="btn btn-primary mb-2" to="/add-product">
+          Add product
+        </Link>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Image</th>
+              <th>Quantity</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product.id}>
+                <td>{product.id}</td>
+                <td>{product.title}</td>
+                <td>{product.description}</td>
+                <td>{product.price}</td>
+                <td>{product.image}</td>
+                <td>{product.quantity}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };

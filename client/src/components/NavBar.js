@@ -43,7 +43,7 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        {user && <div role="button" onClick={handleLogout}>Logout</div>}
+        {user && <div className="btn btn-primary" role="button" onClick={handleLogout}>Logout</div>}
       </div>
     </nav>
   );
