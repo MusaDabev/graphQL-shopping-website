@@ -3,9 +3,9 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import ProductsTable from "./components/ProductsTable";
-import Navbar from "./components/NavBar";
 import UsersList from "./components/UsersList";
 import Login from "./components/Login";
+import ShoppingCart from "./components/ShoppingCart";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -19,6 +19,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/add-product" element={<SaveProductForm />} />
         <Route path="/products" element={<ProductsTable />} />
+        <Route path="/shopping-cart" element={<ShoppingCart />} />
         <Route path="/users" element={<UsersList />} />
       </Routes>
     </ApolloProvider>
