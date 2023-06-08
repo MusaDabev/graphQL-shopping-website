@@ -3,6 +3,7 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import {connectDB} from "./mongo.js";
 
 dotenv.config();
 
@@ -311,14 +312,7 @@ const server = new ApolloServer({
 });
 
 // Connect to MongoDB Atlas
-mongoose
-  .connect(connectionString, { dbName })
-  .then(() => {
-    console.log("Connected to MongoDB Atlas");
-  })
-  .catch((error) => {
-    console.error("Error connecting to MongoDB Atlas:", error);
-  });
+connectDB();
 
 const port: number = Number(process.env.PORT) || 4000;
 const { url } = await startStandaloneServer(server, {
