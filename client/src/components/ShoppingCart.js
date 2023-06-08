@@ -1,5 +1,6 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
+import Navbar from "./NavBar";
 
 const GET_USER = gql`
   query getUser($userId: ID!) {
@@ -40,36 +41,38 @@ const ShoppingCart = () => {
   }
 
   const cartItems = data.getUser.cart;
-  console.log(cartItems);
 
   return (
-    <div>
-      <h2>Shopping Cart</h2>
-      {cartItems && cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <table className="table table-bordered">
-          <thead className="thead-light">
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Price</th>
-              <th>Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cartItems.map((item) => (
-              <tr key={item.id}>
-                <td>{item.title}</td>
-                <td>{item.description}</td>
-                <td>{item.price}</td>
-                <td>{item.quantity}</td>
+    <>
+      <Navbar />
+      <div className="p-4">
+        <h2>Shopping Cart</h2>
+        {cartItems && cartItems.length === 0 ? (
+          <p>Your cart is empty.</p>
+        ) : (
+          <table className="table table-bordered">
+            <thead className="thead-light">
+              <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+            </thead>
+            <tbody>
+              {cartItems.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.title}</td>
+                  <td>{item.description}</td>
+                  <td>{item.price}</td>
+                  <td>{item.quantity}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </>
   );
 };
 

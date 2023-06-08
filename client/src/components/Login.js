@@ -33,7 +33,7 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(user));
 
         // Redirect to the products page
-        window.location.href = '/products';
+        window.location.href = '/';
       }
     } catch (error) {
       console.error("Failed to perform login:", error);
