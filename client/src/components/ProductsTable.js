@@ -1,5 +1,6 @@
-import React from 'react';
-import { useQuery, gql } from '@apollo/client';
+import React from "react";
+import { useQuery, gql } from "@apollo/client";
+import { Link } from "react-router-dom";
 
 const GET_PRODUCTS = gql`
   query GetProducts {
@@ -28,30 +29,33 @@ const ProductsTable = () => {
   const products = data.getProducts;
 
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Price</th>
-          <th>Image</th>
-          <th>Quantity</th>
-        </tr>
-      </thead>
-      <tbody>
-        {products.map((product) => (
-          <tr key={product.id}>
-            <td>{product.id}</td>
-            <td>{product.title}</td>
-            <td>{product.description}</td>
-            <td>{product.price}</td>
-            <td>{product.image}</td>
-            <td>{product.quantity}</td>
+    <>
+      <Link className="btn btn-primary" to="/add-product">Add product</Link>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Quantity</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {products.map((product) => (
+            <tr key={product.id}>
+              <td>{product.id}</td>
+              <td>{product.title}</td>
+              <td>{product.description}</td>
+              <td>{product.price}</td>
+              <td>{product.image}</td>
+              <td>{product.quantity}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 };
 
