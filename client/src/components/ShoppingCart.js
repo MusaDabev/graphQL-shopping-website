@@ -1,6 +1,7 @@
 import React from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql, useMutation } from "@apollo/client";
 import Navbar from "./NavBar";
+import { MdRemoveShoppingCart } from "react-icons/md";
 
 const GET_USER = gql`
   query getUser($userId: ID!) {
@@ -20,6 +21,12 @@ const GET_USER = gql`
   }
 `;
 
+const REMOVE_FROM_CART = gql`
+  mutation RemoveFromCart($userId: ID!, $itemId: ID!) {
+    removeFromCart(userId: $userId, itemId: $itemId)
+  }
+`;
+
 const ShoppingCart = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user.id;
@@ -28,9 +35,22 @@ const ShoppingCart = () => {
     variables: { userId },
   });
 
-  if (data) {
-    console.log(data.getUser);
-  }
+  const [removeFromCart] = useMutation(REMOVE_FROM_CART, {
+    onCompleted: (data) => {
+      // Handle successful removal
+      // You may want to update the UI or refetch cart items here
+      console.log(data)
+    },
+    onError: (error) => {
+      // Handle error
+    },
+  });
+
+  const handleRemoveFromCart = (itemId) => {
+    removeFromCart({
+      variables: { userId, itemId },
+    });
+  };
 
   if (loading) {
     return <p>Loading cart items...</p>;
@@ -57,6 +77,7 @@ const ShoppingCart = () => {
                 <th>Description</th>
                 <th>Price</th>
                 <th>Quantity</th>
+                <th>Remove</th>
               </tr>
             </thead>
             <tbody>
@@ -66,6 +87,9 @@ const ShoppingCart = () => {
                   <td>{item.description}</td>
                   <td>{item.price}</td>
                   <td>{item.quantity}</td>
+                  <td>
+                    <MdRemoveShoppingCart role="button" size="1.6rem" onClick={() => handleRemoveFromCart(item.id)} />
+                  </td>
                 </tr>
               ))}
             </tbody>
