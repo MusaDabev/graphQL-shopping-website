@@ -38,6 +38,7 @@ const typeDefs = `#graphql
       image: String
       quantity: Int
     ): Product,
+    login(email: String!, password: String!): AuthPayload
   }
 
   type User {
@@ -54,6 +55,10 @@ const typeDefs = `#graphql
     price: Float
     image: String
     quantity: Int
+  }
+
+  type AuthPayload {
+    user: User!
   }
 `;
 
@@ -257,6 +262,21 @@ const resolvers = {
         console.error(error);
         throw new Error("Failed to update product");
       }
+    },
+    login: async (_, { email, password }) => {
+      const user = await User.findOne({ email });
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) {
+        throw new Error('Invalid password');
+      }
+
+      return {
+        user,
+      };
     },
   },
 };
