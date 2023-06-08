@@ -39,6 +39,7 @@ const typeDefs = `#graphql
       quantity: Int
     ): Product,
     login(email: String!, password: String!): AuthPayload
+    removeFromCart(userId: ID!, itemId: ID!): Boolean
   }
 
   type User {
@@ -277,6 +278,29 @@ const resolvers = {
       return {
         user,
       };
+    },
+    removeFromCart: async (_, { userId, itemId }) => {
+      try {
+        // Find the user by ID
+        const user = await User.findById(userId);
+
+        if (!user) {
+          throw new Error('User not found');
+        }
+
+        // Remove the item from the user's cart
+        user.cart = user.cart.filter((item) => {
+         return item._id.toString() !== itemId
+        })
+
+        // Save the updated user
+        await user.save();
+
+        return true;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to remove item from cart');
+      }
     },
   },
 };
