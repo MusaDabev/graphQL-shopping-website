@@ -41,6 +41,11 @@ const Navbar = () => {
                 Users
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to="/shopping-cart" className="nav-link">
+                Shopping Cart
+              </Link>
+            </li>
           </ul>
         </div>
         {user && <div className="btn btn-primary" role="button" onClick={handleLogout}>Logout</div>}
