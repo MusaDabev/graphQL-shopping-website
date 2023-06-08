@@ -1,48 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useMutation, gql } from "@apollo/client";
+
+const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      user {
+        id
+        email
+      }
+    }
+  }
+`;
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [login, { loading, error }] = useMutation(LOGIN_MUTATION);
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:4000/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: `
-            mutation Login($email: String!, $password: String!) {
-              login(email: $email, password: $password) {
-                user {
-                  id
-                  email
-                }
-              }
-            }
-          `,
-          variables: {
-            email,
-            password,
-          },
-        }),
+      const { data } = await login({
+        variables: { email, password },
       });
-
-      const { data } = await response.json();
 
       // Check if the login was successful
       if (data && data.login && data.login.user) {
         const user = data.login.user;
+        console.log(user)
 
         // Save the user in local storage
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify(user));
 
-        // Redirect to the home page or perform any other necessary action
-        // ...
+        // Redirect to the products page
+        window.location.href = '/products';
       }
     } catch (error) {
-      console.error('Failed to perform login:', error);
+      console.error("Failed to perform login:", error);
     }
   };
 
@@ -79,11 +73,27 @@ const Login = () => {
               />
             </div>
             <div className="text-center">
-              <button type="button" className="btn btn-primary" onClick={handleLogin}>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleLogin}
+              >
                 Login
               </button>
             </div>
           </form>
+
+          {loading && (
+            <div className="text-center mt-3">
+              <p className="text-muted">Logging in...</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="text-center mt-3">
+              <p className="text-danger">Error occurred while logging in.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { useMutation, gql } from '@apollo/client';
+import React, { useState } from "react";
+import { useMutation, gql } from "@apollo/client";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import Navbar from "./NavBar";
 
 const SAVE_PRODUCT = gql`
   mutation SaveProduct(
@@ -30,10 +31,10 @@ const SAVE_PRODUCT = gql`
 
 function SaveProductForm() {
   const [formState, setFormState] = useState({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
     price: 0,
-    image: '',
+    image: "",
     quantity: 0,
   });
 
@@ -62,10 +63,10 @@ function SaveProductForm() {
         // Handle successful product creation
         // Reset the form
         setFormState({
-          title: '',
-          description: '',
+          title: "",
+          description: "",
           price: 0,
-          image: '',
+          image: "",
           quantity: 0,
         });
       })
@@ -76,69 +77,74 @@ function SaveProductForm() {
   };
 
   return (
-    <div className="container">
-      <h1>Create Product</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="title">Title:</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            className="form-control"
-            value={formState.title}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="description">Description:</label>
-          <input
-            type="text"
-            id="description"
-            name="description"
-            className="form-control"
-            value={formState.description}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="price">Price:</label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            className="form-control"
-            value={formState.price}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="image">Image:</label>
-          <input
-            type="text"
-            id="image"
-            name="image"
-            className="form-control"
-            value={formState.image}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="quantity">Quantity:</label>
-          <input
-            type="number"
-            id="quantity"
-            name="quantity"
-            className="form-control"
-            value={formState.quantity}
-            onChange={handleInputChange}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">Save Product</button>
-        {loading && <p>Loading...</p>}
-        {error && <p>Error: {error.message}</p>}
-      </form>
-    </div>
+    <>
+      <Navbar />
+      <div className="container">
+        <h1>Create Product</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="title">Title:</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              className="form-control"
+              value={formState.title}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="description">Description:</label>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              className="form-control"
+              value={formState.description}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="price">Price:</label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              className="form-control"
+              value={formState.price}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="image">Image:</label>
+            <input
+              type="text"
+              id="image"
+              name="image"
+              className="form-control"
+              value={formState.image}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="quantity">Quantity:</label>
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              className="form-control"
+              value={formState.quantity}
+              onChange={handleInputChange}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Save Product
+          </button>
+          {loading && <p>Loading...</p>}
+          {error && <p>Error: {error.message}</p>}
+        </form>
+      </div>
+    </>
   );
 }
 

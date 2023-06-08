@@ -1,11 +1,23 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const handleLogout = () => {
+    // Clear user from local storage
+    localStorage.removeItem('user');
+
+    // Redirect to the login page
+    window.location.href = '/login';
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
-        <a className="navbar-brand" href="#">Shopping website</a>
+        <a className="navbar-brand" href="#">
+          Shopping website
+        </a>
         <button
           className="navbar-toggler"
           type="button"
@@ -20,13 +32,18 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link to="/products" className="nav-link">Products</Link>
+              <Link to="/products" className="nav-link">
+                Products
+              </Link>
             </li>
             <li className="nav-item">
-              <Link to="/users" className="nav-link">Users</Link>
+              <Link to="/users" className="nav-link">
+                Users
+              </Link>
             </li>
           </ul>
         </div>
+        {user && <div role="button" onClick={handleLogout}>Logout</div>}
       </div>
     </nav>
   );

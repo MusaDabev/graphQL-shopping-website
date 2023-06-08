@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
 import { Link } from "react-router-dom";
+import Navbar from "./NavBar";
 
 const GET_PRODUCTS = gql`
   query GetProducts {
@@ -30,6 +31,7 @@ const ProductsTable = () => {
 
   return (
     <>
+      <Navbar />
       <Link className="btn btn-primary" to="/add-product">Add product</Link>
       <table className="table">
         <thead>

@@ -1,5 +1,6 @@
-import React from 'react';
-import { useQuery, gql } from '@apollo/client';
+import React from "react";
+import { useQuery, gql } from "@apollo/client";
+import Navbar from "./NavBar";
 
 const GET_USERS = gql`
   query GetUsers {
@@ -25,16 +26,19 @@ const UsersList = () => {
   const users = data.getUsers;
 
   return (
-    <div>
-      <h2>Users</h2>
-      <ul>
-        {users.map(user => (
-          <li key={user.id}>
-            <strong>{user.name}</strong> - {user.email}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <Navbar />
+      <div className="p-4">
+        <h2>Users</h2>
+        <ul>
+          {users.map((user) => (
+            <li key={user.id}>
+              <strong>{user.name}</strong> - {user.email}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 };
 

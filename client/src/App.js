@@ -15,9 +15,8 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <Navbar />
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/add-product" element={<SaveProductForm />} />
         <Route path="/products" element={<ProductsTable />} />
         <Route path="/users" element={<UsersList />} />
