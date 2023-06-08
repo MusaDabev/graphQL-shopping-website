@@ -1,7 +1,8 @@
 import React from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
 import Navbar from "./NavBar";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 
 const GET_PRODUCTS = gql`
   query GetProducts {
@@ -16,8 +17,31 @@ const GET_PRODUCTS = gql`
   }
 `;
 
+const ADD_TO_CART = gql`
+  mutation AddToCart($userId: ID!, $productId: ID!) {
+    addToCart(userId: $userId, productId: $productId) {
+      id
+      name
+      email
+      cart {
+        id
+        title
+        description
+        price
+        image
+        quantity
+      }
+    }
+  }
+`;
+
 const ProductsTable = () => {
   const { loading, error, data } = useQuery(GET_PRODUCTS);
+
+  const [addToCartMutation] = useMutation(ADD_TO_CART);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user.id;
 
   if (loading) {
     return <p>Loading...</p>;
@@ -28,6 +52,18 @@ const ProductsTable = () => {
   }
 
   const products = data.getProducts;
+
+  const addToCart = (productId) => {
+    addToCartMutation({
+      variables: { userId, productId },
+    })
+      .then((response) => {
+        console.log(response.data.addToCart);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <>
@@ -44,6 +80,7 @@ const ProductsTable = () => {
               <th>Description</th>
               <th>Price</th>
               <th>Quantity</th>
+              <th>Add to cart</th>
             </tr>
           </thead>
           <tbody>
@@ -54,6 +91,13 @@ const ProductsTable = () => {
                 <td>{product.description}</td>
                 <td>{product.price}</td>
                 <td>{product.quantity}</td>
+                <td>
+                  <AiOutlineShoppingCart
+                    role="button"
+                    size="2rem"
+                    onClick={() => addToCart(product.id)}
+                  />
+                </td>
               </tr>
             ))}
           </tbody>
